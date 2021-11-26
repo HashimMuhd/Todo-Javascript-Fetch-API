@@ -8,13 +8,13 @@ let output="";
 let renderPosts=(posts)=>{
     posts.forEach(post=>{
         output +=`
-        <div id="note">
-        <h5>${post.userId}</h5>
-        <h3>${post.id}</h3>
-       <h4>${post.title}</h4>
-       <h3>${post.completed}</h3>
-         <button class="del">Delete</button>
-         <button class="edit">Edit</button>
+        <div id="note" data-id=${post.id}>
+        <h5>User Id : ${post.userId}</h5>
+        
+       <h4>Title : ${post.title}</h4>
+       <h3>Note : ${post.completed}</h3>
+         <button class="del" id="delete-post">Delete</button>
+         <button class="edit" id="edit-post">Edit</button>
      </div>
         `;
      });
@@ -24,6 +24,23 @@ let renderPosts=(posts)=>{
 let url='https://jsonplaceholder.typicode.com/todos';
 
 fetch(url).then(res => res.json()).then(data =>renderPosts(data))
+
+
+postList.addEventListener('click', (e)=>{
+    e.preventDefault();
+    let deleteButtonIsPressed = e.target.id == 'delete-post';
+    let editButtonIsPressed = e.target.id == 'edit-post';
+
+    let id = e.target.parentElement.dataset.id;
+
+    if(deleteButtonIsPressed){
+        fetch(`${url}/${id}`, {
+            method: 'DELETE',
+        })
+        .then(res=>res.json())
+        .then(()=>location.reload())
+    }
+});
 
 addPostForm.addEventListener('submit', (e)=>{
     e.preventDefault();
